@@ -1,4 +1,4 @@
-﻿Shader "lit/Phong"
+﻿Shader "Custom_BuildIn/Phong"
 {
 	Properties
 	{
