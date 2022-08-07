@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UIBase : MonoBehaviour
 {
-    
+    #region AutoUIBase
+
+    #endregion
 }
 

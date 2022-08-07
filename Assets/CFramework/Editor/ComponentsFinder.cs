@@ -15,12 +15,15 @@ public class ComponentsFinder : Editor
         //以下代码都是通过脚本自动生成的
         public class #类名# :UIBase
         {
+            #region AutoUIBase
             #成员变量#
             [ContextMenu(""Generate"")]
             public void Generate()
             {
                 #查找方法#
             }
+            #endregion
+            
    
         } ";
     public static string TransformFindStr = "#目标成员变量#=transform.Find(\"#路径#\").GetComponent<#组件名称#>();";
@@ -121,6 +124,21 @@ public class ComponentsFinder : Editor
 
 
     }
+    /// <summary>
+    /// 如果UIBase子类已经存在，只修改自动生成的代码，其余不变
+    /// </summary>
+    public void SubUIBaseScriptsExist()
+    {
+
+    }
+
+
+    /// <summary>
+    /// 获取Transform路径
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="root"></param>
+    /// <returns></returns>
     static string GetTransformPath(Transform target,Transform root)
     {
         string pathStr = "";
@@ -141,4 +159,6 @@ public class ComponentsFinder : Editor
         pathStr= pathStr.Substring(0,pathStr.Length-1);
         return pathStr;
     }
+
+    
 }
