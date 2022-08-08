@@ -5,6 +5,13 @@ using UnityEngine;
 
 public class StringHelper
 {
+    /// <summary>
+    /// 截取两个字符串之间的字符串
+    /// </summary>
+    /// <param name="sourse">源字符串</param>
+    /// <param name="startstr">起始字符串</param>
+    /// <param name="endstr">结束字符串</param>
+    /// <returns></returns>
     public static string MidStrEx(string sourse, string startstr, string endstr)
     {
         string result = string.Empty;

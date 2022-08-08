@@ -9,23 +9,23 @@ public class ComponentsFinder : Editor
 {
     public static string objBaseClassStr =
         @"using UnityEngine;
-        using UnityEngine.UI;
-        using UnityEngine.EventSystems;
-        using System;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System;
         //以下代码都是通过脚本自动生成的
-        public class #类名# :UIBase
+    public class #类名# :UIBase
+    {
+        #region AutoUIBase
+        #成员变量#
+        [ContextMenu(""Generate"")]
+        public void Generate()
         {
-            #region AutoUIBase
-            #成员变量#
-            [ContextMenu(""Generate"")]
-            public void Generate()
-            {
-                #查找方法#
-            }
-            #endregion
+            #查找方法#
+        }
+        #endregion
             
    
-        } ";
+    } ";
     public static string TransformFindStr = "#目标成员变量#=transform.Find(\"#路径#\").GetComponent<#组件名称#>();";
     /// <summary>
     /// UI组件查找工具命名标准：_xxx，如：_Img，_Sli，_Tog
@@ -44,12 +44,7 @@ public class ComponentsFinder : Editor
         }
         scriptPath = scriptPath + "/" + className + ".cs";
         //判断文件是否已经存在
-        if(File.Exists(scriptPath))
-        {
-            File.Delete(scriptPath);
-            Debug.Log("存在相同名称的类:" + scriptPath+",已覆盖");
-            
-        }
+        
         string contentStr = "";
         string variableStr = "";
         List<string> variableStrList = new List<string>();
@@ -111,9 +106,19 @@ public class ComponentsFinder : Editor
         classInfo = classInfo.Replace("#类名#", className);
         classInfo = classInfo.Replace("#成员变量#", variableStr);
         classInfo = classInfo.Replace("#查找方法#",contentStr);
-        
+        if (File.Exists(scriptPath))
+        {
+            string originalCode= File.ReadAllText(scriptPath);
+            
+            Debug.Log(originalCode);
+            classInfo= SubUIBaseScriptsExist(classInfo, originalCode);
+            Debug.Log(classInfo);
+            Debug.Log("存在相同名称的类:" + scriptPath + ",已覆盖");
+            
+        }
 
-        FileStream file = new FileStream(scriptPath, FileMode.CreateNew);
+
+        FileStream file = new FileStream(scriptPath, FileMode.Create);
         StreamWriter fileW = new StreamWriter(file, System.Text.Encoding.UTF8);
         fileW.Write(classInfo);
         fileW.Flush();
@@ -127,9 +132,12 @@ public class ComponentsFinder : Editor
     /// <summary>
     /// 如果UIBase子类已经存在，只修改自动生成的代码，其余不变
     /// </summary>
-    public void SubUIBaseScriptsExist()
+    static string SubUIBaseScriptsExist(string newCode,string originalCode)
     {
-
+        string originalCodeTemp= StringHelper.MidStrEx(originalCode, "#region AutoUIBase", "#endregion");
+        string newCodeTemp= StringHelper.MidStrEx(newCode, "#region AutoUIBase", "#endregion");
+        return originalCode.Replace(originalCodeTemp, newCodeTemp);
+        
     }
 
 
