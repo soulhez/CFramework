@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ComponentsFinder : Editor
+public class GameObjectScriptsCreater : Editor
 {
     public static string objBaseClassStr =
         @"using UnityEngine;
@@ -90,11 +90,13 @@ using System;
 
             
         }
+        //初始化变量字符串
         for(int i=0;i<variableStrList.Count;i++)
         {
             variableStr += "public "+variableTypeList[i] +" "+ variableStrList[i]+";\n";
 
         }
+        //初始化查找字符串
         for(int i=0;i<transPathStrList.Count;i++)
         {
             string transformFindStr= TransformFindStr.Replace("#目标成员变量#", variableStrList[i]);
@@ -102,10 +104,12 @@ using System;
             transformFindStr = transformFindStr.Replace("#组件名称#", variableTypeList[i]);
             contentStr += transformFindStr+"\n";
         }
+        //最终写入到文件中的字符串
         string classInfo = objBaseClassStr;
         classInfo = classInfo.Replace("#类名#", className);
         classInfo = classInfo.Replace("#成员变量#", variableStr);
         classInfo = classInfo.Replace("#查找方法#",contentStr);
+        //如果脚本存在，将相应自动生成的代码替换掉
         if (File.Exists(scriptPath))
         {
             string originalCode= File.ReadAllText(scriptPath);
@@ -117,14 +121,14 @@ using System;
             
         }
 
-
+        //写入文件
         FileStream file = new FileStream(scriptPath, FileMode.Create);
         StreamWriter fileW = new StreamWriter(file, System.Text.Encoding.UTF8);
         fileW.Write(classInfo);
         fileW.Flush();
         fileW.Close();
         file.Close();
-
+        //刷新资源列表
         AssetDatabase.Refresh();
 
 
@@ -144,8 +148,8 @@ using System;
     /// <summary>
     /// 获取Transform路径
     /// </summary>
-    /// <param name="target"></param>
-    /// <param name="root"></param>
+    /// <param name="target">目标物体</param>
+    /// <param name="root">根物体</param>
     /// <returns></returns>
     static string GetTransformPath(Transform target,Transform root)
     {
@@ -163,7 +167,7 @@ using System;
 
             }
         }
-        
+        //最后会多一个“/”将它去掉
         pathStr= pathStr.Substring(0,pathStr.Length-1);
         return pathStr;
     }
