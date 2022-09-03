@@ -5,32 +5,15 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameObjectScriptsCreater : Editor
+public class UIBaseScriptsCreater : Editor
 {
-    public static string objBaseClassStr =
-        @"using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using System;
-        //以下代码都是通过脚本自动生成的
-    public class #类名# :UIBase
-    {
-        #region AutoUIBase
-        #成员变量#
-        [ContextMenu(""Generate"")]
-        public void Generate()
-        {
-            #查找方法#
-        }
-        #endregion
-            
-   
-    } ";
+    static string UIBaseTemplatePath = "Assets/CFramework/Editor/CSharpTemplates/UIBaseTemplate.txt";
+    
     public static string TransformFindStr = "#目标成员变量#=transform.Find(\"#路径#\").GetComponent<#组件名称#>();";
     /// <summary>
     /// UI组件查找工具命名标准：_xxx，如：_Img，_Sli，_Tog
     /// </summary>
-    [MenuItem("Tools/CreateUIBaseScript")]
+    [MenuItem("GameObject/CreateUIBaseScript",false,-100)]
     public static void UIComponentFinder()
     {
         GameObject item = Selection.activeGameObject;
@@ -105,10 +88,11 @@ using System;
             contentStr += transformFindStr+"\n";
         }
         //最终写入到文件中的字符串
-        string classInfo = objBaseClassStr;
+        string classInfo = File.ReadAllText(UIBaseTemplatePath, System.Text.Encoding.UTF8);
+        classInfo = classInfo.Replace("#时间#", System.DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss dddd"));
         classInfo = classInfo.Replace("#类名#", className);
         classInfo = classInfo.Replace("#成员变量#", variableStr);
-        classInfo = classInfo.Replace("#查找方法#",contentStr);
+        classInfo = classInfo.Replace("#查找方法#", contentStr);
         //如果脚本存在，将相应自动生成的代码替换掉
         if (File.Exists(scriptPath))
         {
