@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class UIBaseScriptsCreater : Editor
 {
-    static string UIBaseTemplatePath = "Assets/CFramework/Editor/CSharpTemplates/UIBaseTemplate.txt";
+    static string UIBaseTemplatePath = "Assets/CFramework/Editor/Templates/CSharpTemplates/UIBaseTemplate.txt";
     
     public static string TransformFindStr = "#目标成员变量#=transform.Find(\"#路径#\").GetComponent<#组件名称#>();";
     /// <summary>

@@ -7,7 +7,7 @@ using UnityEditor.ProjectWindowCallback;
 
 public class ShaderCreater : Editor
 {
-    public static string shaderTemplatePath ="Assets/CFramework/Editor/Template/URPTemplate.shader";
+    public static string shaderTemplatePath = "Assets/CFramework/Editor/Templates/ShaderTemplates/URPTemplate.shader";
 
 
     [MenuItem("Assets/Create/Shader/URPTemplate", priority =0)]
